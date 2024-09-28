@@ -2,27 +2,60 @@
 
 // src/components/Auth.jsx
 import React, { useState } from "react";
+import { ClipLoader } from "react-spinners"; // Import ClipLoader from react-spinners
+import {useRouter} from "next/navigation"
 
 const Auth = () => {
   const [formData, setFormData] = useState({
     name: "",
-    phoneNumber: "",
-    badgeId: "",
+    phone: "", // Updated to match backend
+    batchId: "", // Updated to match backend
+    rank: "", // Added rank field
   });
+
+  const router =  useRouter();
+
+  const [userType, setUserType] = useState("admin"); // Default to admin
+  const [loading, setLoading] = useState(false); // Loading state
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleUserTypeChange = (e) => {
+    setUserType(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // You can handle the form submission here, e.g., send data to the server
-    console.log("Form Data:", formData);
+    setLoading(true); // Set loading to true
+    const route = userType === "admin" ? "admin" : "dutyofficer";
+    const url = `http://localhost:8000/api/auth/${route}`;
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+      console.log("Response: ", data);
+      if (data.error) {
+        console.error("Error: ", data.error);
+      }
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+    setLoading(false); // Set loading to false
+    alert("Login successful!"); // Show alert
+    router.push("/dashboard/admin"); // Redirect to dashboard
     setFormData({
       name: "",
-      phoneNumber: "",
-      badgeId: "",
+      phone: "", // Reset phone field
+      batchId: "", // Reset batchId field
+      rank: "", // Reset rank field
     });
   };
 
@@ -33,6 +66,26 @@ const Auth = () => {
           Goa Police Login
         </h2>
         <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="userType"
+            >
+              User Type
+            </label>
+            <select
+              id="userType"
+              name="userType"
+              value={userType}
+              onChange={handleUserTypeChange}
+              className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
+              required
+            >
+              <option value="admin">Admin</option>
+              <option value="dutyofficer">Duty Officer</option>
+            </select>
+          </div>
+
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
@@ -55,15 +108,15 @@ const Auth = () => {
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="phoneNumber"
+              htmlFor="phone"
             >
               Phone Number
             </label>
             <input
               type="tel"
-              id="phoneNumber"
-              name="phoneNumber"
-              value={formData.phoneNumber}
+              id="phone"
+              name="phone"
+              value={formData.phone}
               onChange={handleChange}
               className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
               placeholder="Enter your phone number"
@@ -74,18 +127,37 @@ const Auth = () => {
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="badgeId"
+              htmlFor="batchId"
             >
               Badge ID
             </label>
             <input
               type="text"
-              id="badgeId"
-              name="badgeId"
-              value={formData.badgeId}
+              id="batchId"
+              name="batchId"
+              value={formData.batchId}
               onChange={handleChange}
               className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
               placeholder="Enter your Badge ID"
+              required
+            />
+          </div>
+
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="rank"
+            >
+              Rank
+            </label>
+            <input
+              type="text"
+              id="rank"
+              name="rank"
+              value={formData.rank}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
+              placeholder="Enter your rank"
               required
             />
           </div>
@@ -94,8 +166,13 @@ const Auth = () => {
             <button
               type="submit"
               className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={loading} // Disable button when loading
             >
-              Login
+              {loading ? (
+                <ClipLoader color="#ffffff" size={24} /> // Use ClipLoader from react-spinners
+              ) : (
+                "Login"
+              )} {/* Show loading text */}
             </button>
           </div>
         </form>
