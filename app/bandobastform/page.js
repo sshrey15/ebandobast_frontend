@@ -7,7 +7,7 @@ import PiDashboard from '../components/PiDashboard'
 const page = () => {
   return (
     <div>
-            <PiDashboard/>
+            <BandobastForm/>
     </div>
 
   )
