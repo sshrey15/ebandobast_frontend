@@ -1,8 +1,8 @@
 // AlertInfo.jsx
-'use client';
+"use client";
 
 import React, { useState, useEffect } from "react";
-import  Image  from "next/image";
+import Image from "next/image";
 
 const AlertInfo = () => {
   const [formData, setFormData] = useState({
@@ -26,12 +26,17 @@ const AlertInfo = () => {
 
           // Fetch location data from Nominatim API
           try {
-            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+            );
             const data = await response.json();
             console.log("Location Data:", data);
 
             // Update the location input field with the display_name
-            setFormData((prevData) => ({ ...prevData, location: data.display_name }));
+            setFormData((prevData) => ({
+              ...prevData,
+              location: data.display_name,
+            }));
           } catch (error) {
             console.error("Error fetching location data:", error);
           } finally {
@@ -56,7 +61,9 @@ const AlertInfo = () => {
       setFormData((prevData) => ({ ...prevData, images: selectedFiles }));
 
       // Preview the images
-      const imagePreviewUrls = selectedFiles.map((file) => URL.createObjectURL(file));
+      const imagePreviewUrls = selectedFiles.map((file) =>
+        URL.createObjectURL(file)
+      );
       setImagePreviews(imagePreviewUrls);
     } else {
       setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -66,7 +73,7 @@ const AlertInfo = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-  
+
     // Convert images to base64
     const convertToBase64 = (file) => {
       return new Promise((resolve, reject) => {
@@ -76,11 +83,11 @@ const AlertInfo = () => {
         reader.onerror = (error) => reject(error);
       });
     };
-  
+
     const base64Images = await Promise.all(
       formData.images.map((file) => convertToBase64(file))
     );
-  
+
     const payload = {
       description: formData.description,
       imgURL: base64Images,
@@ -88,7 +95,7 @@ const AlertInfo = () => {
       bandobastId: localStorage.getItem("bandobastId"),
       patrolId: localStorage.getItem("patrolId"),
     };
-  
+
     try {
       const response = await fetch("/api/alertinfo", {
         method: "POST",
@@ -97,7 +104,7 @@ const AlertInfo = () => {
         },
         body: JSON.stringify(payload),
       });
-  
+
       const result = await response.json();
       if (response.ok) {
         console.log("Alert info submitted successfully:", result);
@@ -108,6 +115,15 @@ const AlertInfo = () => {
       console.error("Network error:", error);
     } finally {
       setIsLoading(false);
+
+      // Reset the form after submission
+      setFormData({
+        description: "",
+        images: [],
+        location: "",
+      });
+
+      setImagePreviews([]);
     }
   };
 
@@ -123,7 +139,10 @@ const AlertInfo = () => {
 
         {/* Description Input */}
         <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="description">
+          <label
+            className="block text-gray-700 font-bold mb-2"
+            htmlFor="description"
+          >
             Description
           </label>
           <textarea
@@ -140,7 +159,10 @@ const AlertInfo = () => {
 
         {/* Image Upload Input */}
         <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="images">
+          <label
+            className="block text-gray-700 font-bold mb-2"
+            htmlFor="images"
+          >
             Upload Images
           </label>
           <input
@@ -172,7 +194,10 @@ const AlertInfo = () => {
 
         {/* Location Input */}
         <div className="mb-6">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="location">
+          <label
+            className="block text-gray-700 font-bold mb-2"
+            htmlFor="location"
+          >
             Location
           </label>
           <input
@@ -182,7 +207,9 @@ const AlertInfo = () => {
             value={formData.location}
             onChange={handleChange}
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-            placeholder={loadingLocation ? "Adding location..." : "Enter the location"}
+            placeholder={
+              loadingLocation ? "Adding location..." : "Enter the location"
+            }
             required
             disabled={loadingLocation}
           />
