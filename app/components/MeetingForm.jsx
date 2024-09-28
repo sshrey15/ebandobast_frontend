@@ -1,25 +1,21 @@
-// MeetingForm.jsx
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { ClipLoader } from "react-spinners";
+import { useRouter } from "next/navigation";
 
 const MeetingForm = () => {
-  const [formData, setFormData] = useState({
-    receiverId: "",
-    name: "",
-    date: "",
-    time: "",
-    location: "",
-    agenda: "",
-  });
+  const [receiverId, setReceiverId] = useState("");
+  const [name, setName] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [location, setLocation] = useState("");
+  const [agenda, setAgenda] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [creatorId, setCreatorId] = useState("");
+  const [receiverOptions, setReceiverOptions] = useState([]);
 
-  const receiverOptions = [
-    "SuryaPrakash Singh",
-    "Mario Fernandes",
-    "Sukesh Chari",
-    "Sushant Sinha",
-    "Gukesh Naik",
-  ];
+  const router = useRouter();
 
   const goaPoliceStations = [
     "Panaji Police Station",
@@ -34,29 +30,99 @@ const MeetingForm = () => {
     "Candolim Police Station",
   ];
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  useEffect(() => {
+    // Retrieve creatorId from local storage
+    if (typeof window !== "undefined") {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user && user.id) {
+        setCreatorId(user.id);
+      }
+    }
+
+    // Fetch receiver options from the API
+    const fetchReceiverOptions = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/auth/admin");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setReceiverOptions(data.admins || []); // Make sure data is an array
+      } catch (error) {
+        console.error("Error fetching receiver options: ", error);
+      }
+    };
+
+    fetchReceiverOptions();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    const creatorId = localStorage.getItem("senderId"); // Ensure you're getting the correct ID
+  
+    // Combine date and time for proper formatting
+    const combinedDateTime = new Date(`${date}T${time}`).toISOString();
+  
+    const formDataToSend = {
+      creatorId: creatorId,
+      receiverId,
+      name,
+      date: new Date(date).toISOString(),  // Send date as ISO string
+      time: combinedDateTime,  // Send time as part of the date-time
+      location,
+      agenda,
+    };
+  
+    console.log('FormData being sent:', formDataToSend); // Log the data
+  
+    const url = `http://localhost:8000/api/meetings`;
+  
+    // Retrieve the token from local storage
+    const token = localStorage.getItem("token");
+  
+    if (!token) {
+      console.error("No token found");
+      setLoading(false);
+      return;
+    }
+  
+    console.log("Token:", token); // Log the token to ensure it is retrieved correctly
+  
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`, // Include the token
+        },
+        body: JSON.stringify(formDataToSend),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      if (data.error) {
+        console.error("Error: ", data.error);
+      } else {
+        alert("Form submitted successfully!");
+        router.push("/dashboard/admin");
+      }
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+    setLoading(false);
+    setReceiverId("");
+    setName("");
+    setDate("");
+    setTime("");
+    setLocation("");
+    setAgenda("");
   };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();   
-
-
-    // Process form data (e.g., send to server)   
-
-    console.log("Form Data:", formData); // Or use fetch/axios for backend interaction
-
-    // Clear form data after submission (optional, depending on your use case)
-    setFormData({
-      receiverId: "",
-      name: "",
-      date: "",
-      time: "",
-      location: "",
-      agenda: "",
-    });
-  };
+  
 
   return (
     <div className="flex justify-center items-center min-h-screen p-6 bg-gray-100">
@@ -71,19 +137,20 @@ const MeetingForm = () => {
           <select
             id="receiverId"
             name="receiverId"
-            value={formData.receiverId}
-            onChange={handleChange}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+            value={receiverId}
+            onChange={(e) => setReceiverId(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-md"
             required
           >
             <option value="" disabled>
               Select a receiver
             </option>
-            {receiverOptions.map((receiver, index) => (
-              <option key={index} value={receiver}>
-                {receiver}
-              </option>
-            ))}
+            {Array.isArray(receiverOptions) &&
+              receiverOptions.map((receiver) => (
+                <option key={receiver.id} value={receiver.id}>
+                  {receiver.name}
+                </option>
+              ))}
           </select>
         </div>
 
@@ -96,8 +163,8 @@ const MeetingForm = () => {
             type="text"
             id="name"
             name="name"
-            value={formData.name}
-            onChange={handleChange}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="Enter your name"
             required
@@ -113,8 +180,8 @@ const MeetingForm = () => {
             type="date"
             id="date"
             name="date"
-            value={formData.date}
-            onChange={handleChange}
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
           />
@@ -129,8 +196,8 @@ const MeetingForm = () => {
             type="time"
             id="time"
             name="time"
-            value={formData.time}
-            onChange={handleChange}
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
           />
@@ -144,8 +211,8 @@ const MeetingForm = () => {
           <select
             id="location"
             name="location"
-            value={formData.location}
-            onChange={handleChange}
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
           >
@@ -168,8 +235,8 @@ const MeetingForm = () => {
           <textarea
             id="agenda"
             name="agenda"
-            value={formData.agenda}
-            onChange={handleChange}
+            value={agenda}
+            onChange={(e) => setAgenda(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             rows="4"
             placeholder="Enter the meeting agenda"
@@ -181,9 +248,10 @@ const MeetingForm = () => {
         <div className="flex justify-center">
           <button
             type="submit"
-            className="bg-blue-500 w-full text-white font-bold py-2 px-4 rounded-full hover:bg-blue-600 transition duration-300"
+            className="bg-blue-500 w-full text-white font-bold py-2 px-4 rounded-full hover:bg-blue-600"
+            disabled={loading}
           >
-            Submit
+            {loading ? <ClipLoader color="#ffffff" size={24} /> : "Submit"}
           </button>
         </div>
       </form>

@@ -3,7 +3,7 @@
 // src/components/Auth.jsx
 import React, { useState } from "react";
 import { ClipLoader } from "react-spinners"; // Import ClipLoader from react-spinners
-import {useRouter} from "next/navigation"
+import { useRouter } from "next/navigation";
 
 const Auth = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +13,7 @@ const Auth = () => {
     rank: "", // Added rank field
   });
 
-  const router =  useRouter();
+  const router = useRouter();
 
   const [userType, setUserType] = useState("admin"); // Default to admin
   const [loading, setLoading] = useState(false); // Loading state
@@ -44,13 +44,18 @@ const Auth = () => {
       console.log("Response: ", data);
       if (data.error) {
         console.error("Error: ", data.error);
+      } else {
+        // Save token and user information in local storage
+        localStorage.setItem("senderId", data.existing_admin.id);
+        localStorage.setItem("user", JSON.stringify(formData.name));
+        localStorage.setItem("userId", user.id);
+        alert("Login successful!"); // Show alert
+        router.push("/dashboard/admin"); // Redirect to dashboard
       }
     } catch (error) {
       console.error("Error: ", error);
     }
     setLoading(false); // Set loading to false
-    alert("Login successful!"); // Show alert
-    router.push("/dashboard/admin"); // Redirect to dashboard
     setFormData({
       name: "",
       phone: "", // Reset phone field
