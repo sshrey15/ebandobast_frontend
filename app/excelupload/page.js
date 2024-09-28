@@ -299,7 +299,7 @@ const ExcelUpload = () => {
   // Initialize map and vector layer
   useEffect(() => {
     if (mapRef.current && !mainMap.current) {
-      const boundingBox = [73.947, 15.265, 73.9686, 15.2856];
+      const boundingBox = [72.975037,14.845435,75.061066,15.818866];
       const extent = fromLonLat([boundingBox[0], boundingBox[1]]).concat(
         fromLonLat([boundingBox[2], boundingBox[3]])
       );
@@ -313,7 +313,7 @@ const ExcelUpload = () => {
         ],
         view: new View({
           center: fromLonLat([73.9578, 15.2753]),
-          zoom: 15,
+          zoom: 40,
           extent: extent,
         }),
       });
