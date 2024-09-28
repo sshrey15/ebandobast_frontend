@@ -1,5 +1,5 @@
 // AlertInfo.jsx
-'use client';
+"use client";
 
 import React, { useState } from "react";
 
@@ -20,7 +20,9 @@ const AlertInfo = () => {
       setFormData((prevData) => ({ ...prevData, images: selectedFiles }));
 
       // Preview the images
-      const imagePreviewUrls = selectedFiles.map((file) => URL.createObjectURL(file));
+      const imagePreviewUrls = selectedFiles.map((file) =>
+        URL.createObjectURL(file)
+      );
       setImagePreviews(imagePreviewUrls);
     } else {
       setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -30,6 +32,13 @@ const AlertInfo = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form Data:", formData); // Display form data in console
+    setFormData({
+      description: "",
+      images: [],
+      location: "",
+    });
+
+    setImagePreviews([]);
   };
 
   return (
@@ -44,7 +53,10 @@ const AlertInfo = () => {
 
         {/* Description Input */}
         <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="description">
+          <label
+            className="block text-gray-700 font-bold mb-2"
+            htmlFor="description"
+          >
             Description
           </label>
           <textarea
@@ -61,7 +73,10 @@ const AlertInfo = () => {
 
         {/* Image Upload Input */}
         <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="images">
+          <label
+            className="block text-gray-700 font-bold mb-2"
+            htmlFor="images"
+          >
             Upload Images
           </label>
           <input
@@ -91,7 +106,10 @@ const AlertInfo = () => {
 
         {/* Location Input */}
         <div className="mb-6">
-          <label className="block text-gray-700 font-bold mb-2" htmlFor="location">
+          <label
+            className="block text-gray-700 font-bold mb-2"
+            htmlFor="location"
+          >
             Location
           </label>
           <input
