@@ -11,7 +11,9 @@ import Drawer from '../components/Drawer'
 const page = () => {
   return (
     <div>
-            <Profile/>
+
+            <BandobastForm/>
+
     </div>
 
   )
