@@ -1,5 +1,7 @@
 'use client';
 import React, { useState } from "react";
+import { ClipLoader } from "react-spinners"; // Import ClipLoader from react-spinners
+import { useRouter } from "next/navigation";
 
 const BandobastForm = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +10,8 @@ const BandobastForm = () => {
     location: "",
     description: "",
   });
+  const router = useRouter();
+  const [loading, setLoading] = useState(false); // Loading state
 
   const goaLocations = [
     "Panaji",
@@ -27,21 +31,42 @@ const BandobastForm = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();   
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true); // Set loading to true
 
+    const url = `http://localhost:8000/api/bandobast/`;
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+      console.log("Response: ", data);
+      if (data.error) {
+        console.error("Error: ", data.error);
+      } else {
+        // Save bandobastId to localStorage
+        localStorage.setItem("bandobastId", data.bandobast.id);
 
-    // Process form data (e.g., send to server)   
-
-    console.log("Form Data:", formData); // Or use fetch/axios for backend interaction
-
-    // Clear form data after submission (optional, depending on your use case)
-    setFormData({
-      name: "",
-      date: "",
-      location: "",
-      description: "",
-    });
+        setLoading(false); // Set loading to false
+        alert("Bandobast created successfully!"); // Show alert
+        router.push("/excelupload"); // Redirect to dashboard
+        setFormData({
+          name: "",
+          date: "",
+          location: "",
+          description: "",
+        });
+      }
+    } catch (error) {
+      console.error("Error: ", error);
+    } finally {
+      setLoading(false); // Set loading to false
+    }
   };
 
   return (
@@ -58,11 +83,9 @@ const BandobastForm = () => {
             type="text"
             id="name"
             name="name"
-            value={formData.name}   
-
+            value={formData.name}
             onChange={handleChange}
-            className="w-full   
- p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="Enter your name"
             required
           />
@@ -116,10 +139,8 @@ const BandobastForm = () => {
           <textarea
             id="description"
             name="description"
-            value={formData.description}   
-
-            onChange={handleChange}   
-
+            value={formData.description}
+            onChange={handleChange}
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             rows="4"
             placeholder="Enter a description"
@@ -132,8 +153,13 @@ const BandobastForm = () => {
           <button
             type="submit"
             className="bg-blue-500 w-full text-white font-bold py-2 px-4 rounded-full hover:bg-blue-600 transition duration-300"
+            disabled={loading} // Disable button when loading
           >
-            Submit
+            {loading ? (
+              <ClipLoader color="#ffffff" size={24} /> // Use ClipLoader from react-spinners
+            ) : (
+              "Submit"
+            )}
           </button>
         </div>
       </form>
@@ -142,5 +168,3 @@ const BandobastForm = () => {
 };
 
 export default BandobastForm;
-
-
