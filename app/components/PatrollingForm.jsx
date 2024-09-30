@@ -44,7 +44,7 @@ const PatrollingForm = () => {
   useEffect(() => {
     // Retrieve supervisor name from local storage
     if (typeof window !== "undefined") {
-      const user = localStorage.getItem("user");
+      const user = localStorage.getItem("name");
       if (user) {
         setSupervisor(user);
       }

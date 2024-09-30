@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import { FaPlus } from "react-icons/fa";
+import Link from 'next/link';
 
 const Dashboard = () => {
   return (
@@ -35,7 +37,7 @@ const Dashboard = () => {
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
-                <h2 className="text-5xl font-bold">600</h2>
+                <h2 className="text-5xl font-bold">60</h2>
                 <p className="text-gray-500">Total Staff</p>
               </div>
             </div>
@@ -80,22 +82,26 @@ const Dashboard = () => {
         <div className="grid grid-cols-4 gap-6">
           <div className="bg-blue-500 text-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center">
             <h4 className="text-lg font-semibold">Today Event</h4>
-            <p className="mt-2 text-2xl font-bold">50 / 100</p>
+            <p className="mt-2 text-2xl font-bold">3</p>
           </div>
 
+          <Link href={`/bandobastform`}>
           <div className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center">
             <h4 className="text-lg font-semibold">Bandobast</h4>
-            <p className="mt-2 text-2xl font-bold">30 / 50</p>
+            <FaPlus className="mt-2 text-2xl text-blue-500" />
           </div>
+          </Link>
 
+          <Link href={`/patrollingForm`}>
           <div className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center">
-            <h4 className="text-lg font-semibold">Petroling</h4>
-            <p className="mt-2 text-2xl font-bold">20 / 50</p>
+            <h4 className="text-lg font-semibold">Patrolling</h4>
+            <FaPlus className="mt-2 text-2xl text-blue-500" />
           </div>
+          </Link>
 
           <div className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center">
             <h4 className="text-lg font-semibold">Station Duty</h4>
-            <p className="mt-2 text-2xl font-bold">500</p>
+            <p className="mt-2 text-2xl font-bold">50</p>
           </div>
         </div>
       </div>

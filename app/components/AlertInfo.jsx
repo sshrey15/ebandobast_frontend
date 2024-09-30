@@ -1,4 +1,3 @@
-// AlertInfo.jsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -54,77 +53,39 @@ const AlertInfo = () => {
   }, []);
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value } = e.target;
 
-    if (name === "images") {
-      const selectedFiles = Array.from(files);
-      setFormData((prevData) => ({ ...prevData, images: selectedFiles }));
-
-      // Preview the images
-      const imagePreviewUrls = selectedFiles.map((file) =>
-        URL.createObjectURL(file)
-      );
-      setImagePreviews(imagePreviewUrls);
-    } else {
-      setFormData((prevData) => ({ ...prevData, [name]: value }));
-    }
+    // Handle non-image input fields
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+
+    // Update the form data with the selected image files
+    setFormData((prevData) => ({ ...prevData, images: [...prevData.images, ...files] }));
+
+    // Generate image preview URLs for display
+    const imagePreviewUrls = files.map((file) => URL.createObjectURL(file));
+    setImagePreviews((prevPreviews) => [...prevPreviews, ...imagePreviewUrls]);
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setIsLoading(true);
 
-    // Convert images to base64
-    const convertToBase64 = (file) => {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = (error) => reject(error);
-      });
-    };
+    // Trigger an alert with form data details instead of posting to an API
+    alert(`Alert Information Submitted!\n
+Description: ${formData.description}\n
+Location: ${formData.location}\n
+Images: ${formData.images.length} image(s) uploaded`);
 
-    const base64Images = await Promise.all(
-      formData.images.map((file) => convertToBase64(file))
-    );
-
-    const payload = {
-      description: formData.description,
-      imgURL: base64Images,
-      location: formData.location,
-      bandobastId: localStorage.getItem("bandobastId"),
-      patrolId: localStorage.getItem("patrolId"),
-    };
-
-    try {
-      const response = await fetch("/api/alertinfo", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        console.log("Alert info submitted successfully:", result);
-      } else {
-        console.error("Error submitting alert info:", result);
-      }
-    } catch (error) {
-      console.error("Network error:", error);
-    } finally {
-      setIsLoading(false);
-
-      // Reset the form after submission
-      setFormData({
-        description: "",
-        images: [],
-        location: "",
-      });
-
-      setImagePreviews([]);
-    }
+    // Reset the form data and previews
+    setFormData({
+      description: "",
+      images: [],
+      location: "",
+    });
+    setImagePreviews([]);
   };
 
   return (
@@ -171,7 +132,7 @@ const AlertInfo = () => {
             name="images"
             accept="image/*"
             multiple
-            onChange={handleChange}
+            onChange={handleImageChange}
             className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
           />
@@ -220,9 +181,8 @@ const AlertInfo = () => {
           <button
             type="submit"
             className="bg-blue-500 w-full text-white font-bold py-2 px-4 rounded-full hover:bg-blue-600 transition duration-300"
-            disabled={isLoading}
           >
-            {isLoading ? "Submitting..." : "Submit"}
+            Submit
           </button>
         </div>
       </form>

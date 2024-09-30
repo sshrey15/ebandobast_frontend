@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { FaCarSide } from "react-icons/fa"; // Using React Icons for the car icon
 import { FiClock, FiMapPin } from "react-icons/fi"; // React Icons for time and location
@@ -9,10 +10,11 @@ const PatrollingCard = ({
   startTime,
   endTime,
   route,
+  onClick,
   supervisingOfficer, // Added new prop for Supervising Officer
 }) => {
   return (
-    <div className="w-full max-w-xl p-4 bg-white shadow-md rounded-lg flex items-center justify-between space-x-4 border-spacing-11">
+    <div onClick={onClick} className="w-full max-w-xl p-4 bg-white shadow-md rounded-lg flex items-center justify-between space-x-4 border-spacing-11">
       {/* Left Section: Icon & Details */}
       <div className="flex items-center space-x-4">
         {/* Car Icon */}
@@ -29,7 +31,7 @@ const PatrollingCard = ({
           <div className="flex items-center text-sm text-gray-600 mt-1">
             <FiClock className="mr-1" /> {patrollingDate}
           </div>
-          <div className="text-xs text-gray-500">Created: {createdAt}</div>
+          
         </div>
       </div>
 

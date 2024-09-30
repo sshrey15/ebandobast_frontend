@@ -32,12 +32,6 @@ const MeetingForm = () => {
 
   useEffect(() => {
     // Retrieve creatorId from local storage
-    if (typeof window !== "undefined") {
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (user && user.id) {
-        setCreatorId(user.id);
-      }
-    }
 
     // Fetch receiver options from the API
     const fetchReceiverOptions = async () => {
@@ -60,7 +54,7 @@ const MeetingForm = () => {
     e.preventDefault();
     setLoading(true);
     
-    const creatorId = localStorage.getItem("senderId"); // Ensure you're getting the correct ID
+    const creatorId = localStorage.getItem("senderIds"); // Ensure you're getting the correct ID
   
     // Combine date and time for proper formatting
     const combinedDateTime = new Date(`${date}T${time}`).toISOString();
@@ -79,23 +73,16 @@ const MeetingForm = () => {
   
     const url = `http://localhost:8000/api/meetings`;
   
-    // Retrieve the token from local storage
-    const token = localStorage.getItem("token");
+ 
   
-    if (!token) {
-      console.error("No token found");
-      setLoading(false);
-      return;
-    }
-  
-    console.log("Token:", token); // Log the token to ensure it is retrieved correctly
+     // Log the token to ensure it is retrieved correctly
   
     try {
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`, // Include the token
+           // Include the token
         },
         body: JSON.stringify(formDataToSend),
       });

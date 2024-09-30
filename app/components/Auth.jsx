@@ -40,17 +40,28 @@ const Auth = () => {
         },
         body: JSON.stringify(formData),
       });
+
       const data = await response.json();
-      console.log("Response: ", data);
+      console.log("Response: ", data); // Log the response data
+
       if (data.error) {
         console.error("Error: ", data.error);
-      } else {
+      } else if (data.existing_admin || data.existing_dutyOfficer) {
         // Save token and user information in local storage
-        localStorage.setItem("senderId", data.existing_admin.id);
-        localStorage.setItem("user", JSON.stringify(formData.name));
-        localStorage.setItem("userId", user.id);
+        if (data.existing_admin) {
+          localStorage.setItem("senderId", data.existing_admin.id); // Corrected key to "senderId"
+        }
+        if (data.existing_dutyOfficer) {
+          localStorage.setItem("dutyofficerId", data.existing_dutyOfficer.id);
+        }
+        localStorage.setItem("name", formData.name);
+
         alert("Login successful!"); // Show alert
-        router.push("/dashboard/admin"); // Redirect to dashboard
+        const redirectId = data.existing_admin ? data.existing_admin.id : data.existing_dutyOfficer.id;
+        router.push(`/dashboard/${userType}/`); // Redirect to dashboard
+      } else {
+        console.error("Unexpected response structure: ", data);
+        alert("Unexpected response structure. Please check the console for more details.");
       }
     } catch (error) {
       console.error("Error: ", error);

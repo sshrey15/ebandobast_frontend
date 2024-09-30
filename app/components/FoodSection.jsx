@@ -10,37 +10,31 @@ const FoodSection = () => {
   const router = useRouter();
 
   const foodItems = [
-    { id: 1, imageUrl: "/api/placeholder/400/300", name: "Coca-Cola", price: 40, category: "Soft Drinks" },
-    { id: 2, imageUrl: "/api/placeholder/400/300", name: "Pepsi", price: 35, category: "Soft Drinks" },
-    { id: 3, imageUrl: "/api/placeholder/400/300", name: "Sprite", price: 40, category: "Soft Drinks" },
-    { id: 4, imageUrl: "/api/placeholder/400/300", name: "Minute Maid Orange Juice", price: 80, category: "Fruit Juice" },
-    { id: 5, imageUrl: "/api/placeholder/400/300", name: "Tropicana Apple Juice", price: 90, category: "Fruit Juice" },
-    { id: 6, imageUrl: "/api/placeholder/400/300", name: "Red Bull", price: 120, category: "Energy Drinks" },
-    { id: 7, imageUrl: "/api/placeholder/400/300", name: "Monster Energy", price: 150, category: "Energy Drinks" },
-    { id: 8, imageUrl: "/api/placeholder/400/300", name: "Parle-G Biscuits", price: 20, category: "Biscuits" },
-    { id: 9, imageUrl: "/api/placeholder/400/300", name: "Oreo Biscuits", price: 50, category: "Biscuits" },
-    { id: 10, imageUrl: "/api/placeholder/400/300", name: "Good Day Butter Cookies", price: 60, category: "Biscuits" },
-    { id: 11, imageUrl: "/api/placeholder/400/300", name: "Lay's Classic Chips", price: 30, category: "Chips" },
-    { id: 12, imageUrl: "/api/placeholder/400/300", name: "Doritos Nacho Cheese", price: 80, category: "Chips" },
-    { id: 13, imageUrl: "/api/placeholder/400/300", name: "Kurkure Masala Munch", price: 20, category: "Chips" },
-    { id: 14, imageUrl: "/api/placeholder/400/300", name: "Haldiram's Bhujia Sev", price: 100, category: "Namkeen" },
-    { id: 15, imageUrl: "/api/placeholder/400/300", name: "Balaji Shev", price: 70, category: "Namkeen" },
-    { id: 16, imageUrl: "/api/placeholder/400/300", name: "Chitale Farsan", price: 90, category: "Namkeen" },
-    { id: 17, imageUrl: "/api/placeholder/400/300", name: "Cadbury Dairy Milk", price: 50, category: "Chocolates" },
-    { id: 18, imageUrl: "/api/placeholder/400/300", name: "Nestlé KitKat", price: 40, category: "Chocolates" },
-    { id: 19, imageUrl: "/api/placeholder/400/300", name: "Ferrero Rocher", price: 400, category: "Chocolates" },
-    { id: 20, imageUrl: "/api/placeholder/400/300", name: "Mango Frooti Juice", price: 30, category: "Fruit Juice" },
-    { id: 21, imageUrl: "/api/placeholder/400/300", name: "Appy Fizz", price: 25, category: "Soft Drinks" },
-    { id: 22, imageUrl: "/api/placeholder/400/300", name: "Mountain Dew", price: 40, category: "Soft Drinks" },
-    { id: 23, imageUrl: "/api/placeholder/400/300", name: "7UP", price: 35, category: "Soft Drinks" },
-    { id: 24, imageUrl: "/api/placeholder/400/300", name: "Real Mixed Fruit Juice", price: 100, category: "Fruit Juice" },
-    { id: 25, imageUrl: "/api/placeholder/400/300", name: "Amul Butter Biscuits", price: 35, category: "Biscuits" },
-    { id: 26, imageUrl: "/api/placeholder/400/300", name: "Unibic Choco Chip Cookies", price: 75, category: "Biscuits" },
-    { id: 27, imageUrl: "/api/placeholder/400/300", name: "Pringles Original Chips", price: 150, category: "Chips" },
-    { id: 28, imageUrl: "/api/placeholder/400/300", name: "Munch", price: 10, category: "Chocolates" },
-    { id: 29, imageUrl: "/api/placeholder/400/300", name: "Mars Bar", price: 100, category: "Chocolates" },
-    { id: 30, imageUrl: "/api/placeholder/400/300", name: "Gatorade", price: 80, category: "Energy Drinks" }
-];
+    // Rice items
+    { id: 1, imageUrl: "https://www.indianhealthyrecipes.com/wp-content/uploads/2021/09/veg-biryani-vegetable-biryani.jpg", name: "Veg Biryani", price: 150, category: "Rice" },
+    { id: 2, imageUrl: "https://www.indianhealthyrecipes.com/wp-content/uploads/2022/12/jeera-rice-recipe.jpg", name: "Jeera Rice", price: 80, category: "Rice" },
+    { id: 3, imageUrl: "https://holycowvegan.net/wp-content/uploads/2014/06/masala-khichdi-featured-image.jpg", name: "Khichadi Rice", price: 110, category: "Rice" },
+    { id: 4, imageUrl: "https://www.indianhealthyrecipes.com/wp-content/uploads/2022/02/curd-rice-thayir-sadam.jpg", name: "Curd Rice", price: 90, category: "Rice" },
+    { id: 5, imageUrl: "https://myheartbeets.com/wp-content/uploads/2020/02/instant-pot-everyday-dal-chawal.jpg", name: "Daal-Rice", price: 100, category: "Rice" },
+  
+    // Goa delicacies
+    { id: 6, imageUrl: "https://abbyshearth.com/wp-content/uploads/2022/05/ladi-pav.jpg", name: "Paav 1pc", price: 5, category: "Goa Delicacies" },
+    { id: 7, imageUrl: "https://www.bigfattummy.com/wp-content/uploads/2019/05/Dry-Green-Pea-Patal-Bhaji-05-1-800x800.jpg", name: "Bhaaji Paav", price: 60, category: "Goa Delicacies" },
+    { id: 9, imageUrl: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Ros_omelette.jpg", name: "Ross Omlete", price: 60, category: "Goa Delicacies" },
+    { id: 10, imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyNQujdpY5kD6Uf0BD-F-Gc_f95tlfgpFNJw&s", name: "Mushroom Bhaji", price: 40, category: "Goa Delicacies" },
+  
+    // Drinks
+    { id: 11, imageUrl: "https://everydaysure.in/water/assets/media/bisleri-1ltr.jpg", name: "Water bottle 1L", price: 20, category: "Drinks" },
+    { id: 12, imageUrl: "https://everydaysure.in/water/assets/media/bisleri-1ltr.jpg", name: "Water bottle 500ml", price: 10, category: "Drinks" },
+    { id: 13, imageUrl: "https://m.media-amazon.com/images/I/71QKr98XL+L.jpg", name: "Gatorade 250ml", price: 25, category: "Drinks" },
+    { id: 14, imageUrl: "https://m.media-amazon.com/images/I/71k1gi24UtL.jpg", name: "Real Fruit Juice", price: 30, category: "Drinks" },
+  
+    // Indian Snacks
+    { id: 15, imageUrl: "https://static.toiimg.com/photo/59217136.cms?width=500&resizemode=4&imgsize=167880", name: "Samosa", price: 15, category: "Indian Snacks" },
+    { id: 16, imageUrl: "https://static.toiimg.com/photo/59217136.cms?width=500&resizemode=4&imgsize=167880", name: "Vada paav", price: 10, category: "Indian Snacks" },
+    { id: 17, imageUrl: "https://static.toiimg.com/photo/59217136.cms?width=500&resizemode=4&imgsize=167880", name: "Khachori", price: 20, category: "Indian Snacks" },
+    { id: 18, imageUrl: "https://static.toiimg.com/photo/59217136.cms?width=500&resizemode=4&imgsize=167880", name: "Bread pakora", price: 15, category: "Indian Snacks" },
+  ];
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -71,7 +65,9 @@ const FoodSection = () => {
     ]
   };
 
- const categories = ["All", "Soft Drinks", "Fruit Juice", "Energy Drinks", "Biscuits", "Chips", "Namkeen", "Chocolates"];
+  const categories = ["All", "Rice", "Goa Delicacies", "Drinks", "Indian Snacks"];
+
+
 
   const addToCart = (item) => {
     setCartItems(prev => {
@@ -118,7 +114,7 @@ const FoodSection = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 p-4 sm:p-6">
-      <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6 sm:mb-8">FoodBandobast</h1>
+    
 
       <div className="w-full max-w-4xl mb-6 sm:mb-8 flex flex-col sm:flex-row gap-4">
         <input
